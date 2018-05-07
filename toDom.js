@@ -29,7 +29,7 @@ const toDom = function (structure, options = {}) {
 
                 const appendToParent = (parent,resp) => {
                     if (Array.isArray(resp) || resp instanceof HTMLCollection || resp instanceof NodeList) {
-                        for (let i = 0; i < parent.length ; i++) {
+                        for (let i = 0; i < resp.length ; i++) {
                             appendToParent(parent,resp[i])
                         }
                     } else if (Array.isArray(parent) || parent instanceof HTMLCollection || parent instanceof NodeList) {
@@ -67,7 +67,6 @@ const toDom = function (structure, options = {}) {
                         resp.push(i == 0 ? r : cloneNode(r))
                     }
                 }
-                console.log('at')
                 appendToParent(parents,resp)
 
                 return resp;
@@ -81,7 +80,6 @@ const toDom = function (structure, options = {}) {
                 for (let i= 0; i < option; i++) {
                     resp.push(i == 0 ? r : cloneNode(r))
                 }
-                console.log('t')
                 return resp;
             }
         }
