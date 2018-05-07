@@ -57,8 +57,8 @@ and returns a DOM element or an array of DOM elements.
 
 ### Structure
 Structure could be:
-- An string. In such case `toDom` will return an Text element.
-- An array where *first element* is * not a string*. In such case, `toDom` will return an array with `toDom` function applied to all its elements.
+- A string or a number. In such case `toDom` will return an Text element.
+- An array where *first element* is *not a string*. In such case, `toDom` will return an array with `toDom` function applied to all its elements.
 - An array where first element is a *string*. In such case:
     - First element will be the tag name of the DOM element.
     - For the rest of them:
@@ -79,5 +79,5 @@ Structure could be:
 
 ### Example
 ```javascript
-    toDom(['li',['p','List item'], function click() { this.parentNode.removeChild(this)}],{t:10,at: toDom(['ul'],{at:'body'})})
+    toDom(['li',['p','List item']],{t:10,at: toDom(['ul'],{at:'body'})})
 ```
