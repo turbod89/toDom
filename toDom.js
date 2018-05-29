@@ -107,9 +107,9 @@ const toDom = function (structure, options = {}) {
                     domElement.setAttribute(attrName, structure[i][attrName])
                 }
 
-            } else if (typeof structure[i] === 'function') {
+            } else if (typeof structure[i] === 'function' && structure[i].name.length > 1 && structure[i].name[0] === '$') {
                 
-                domElement.addEventListener(structure[i].name, structure[i])
+                domElement.addEventListener(structure[i].name.substr(1), structure[i])
 
             } else {
 
@@ -125,17 +125,99 @@ const toDom = function (structure, options = {}) {
 
         return domElement
 
+    } else if (Array.isArray(structure) && structure.length > 0 && typeof structure[0] === 'function') {
 
+        if (structure.length === 1) {
+            return toDom(structure[0](),options)
+        } else if (structure.length >= 2 && typeof structure[1] === 'number') {
+            
+            let to = structure[1];
+            let from = 0;
+            let step = 1;
+
+            if ( structure.length >= 3 && typeof structure[2] === 'number') {
+                to = structure[2]
+                from = structure[1]
+                if ( structure.length >= 4 && typeof structure[3] === 'number') {
+                    step = structure[3]
+                }
+            }
+
+            const resp = [];
+
+            for (let i = from; i < to; i+= step) {
+                const subResp = toDom(structure[0](i),options)
+
+                if (Array.isArray(subResp)) {
+                    subResp.forEach( subsubResp => resp.push(subsubResp))
+                } else {
+                    resp.push(subResp)
+                }
+            }
+
+            return resp
+
+        } else if (structure.length === 2 && Array.isArray(structure[1]) ) {
+
+            const resp = []
+
+            structure[1].forEach( (e,i,a) => {
+                const subResp = toDom(structure[0](e,i,a),options)
+                
+                if (Array.isArray(subResp)) {
+                    subResp.forEach( subsubResp => resp.push(subsubResp))
+                } else {
+                    resp.push(subResp)
+                }
+            })
+
+            return resp
+
+        } else if (structure.length === 2 && typeof structure[1] === 'object') {
+
+            const resp = [];
+
+            for (let key in structure[1]) {
+                const subResp = toDom(structure[0](structure[1][key],key,structure[1]),options)
+
+
+                if (Array.isArray(subResp)) {
+                    subResp.forEach( subsubResp => resp.push(subsubResp))
+                } else {
+                    resp.push(subResp)
+                }
+            }
+        
+            return resp
+
+        } else {
+            return toDom(structure[0](),options)
+        }
 
     } else if (Array.isArray(structure)) {
 
-        return structure.map(substructure => toDom(substructure,options))
+        const resp = []
+
+        structure.forEach(substructure => {
+
+            const subResp = toDom(substructure,options)
+
+            if (Array.isArray(subResp)) {
+                subResp.forEach( subsubResp => resp.push(subsubResp))
+            } else {
+                resp.push(subResp)
+            }
+        })
+
+
+        return resp
 
     } else if (typeof structure === 'object') {
 
     } else if (typeof structure === 'string' || typeof structure === 'number') {
 
         return document.createTextNode(''+structure)
+
     }
 
     return structure
