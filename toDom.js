@@ -72,7 +72,7 @@ const toDom = function (structure, options = {}) {
                 return resp;
                 
             } else if (flag.toLowerCase() === 'times' || flag.toLowerCase() === 't') {
-
+                /*
                 const newOptions = Object.assign({},options);
                 delete newOptions[flag]
                 const resp = [];
@@ -81,6 +81,7 @@ const toDom = function (structure, options = {}) {
                     resp.push(i == 0 ? r : cloneNode(r))
                 }
                 return resp;
+                */
             }
         }
     }
@@ -110,6 +111,10 @@ const toDom = function (structure, options = {}) {
             } else if (typeof structure[i] === 'function' && structure[i].name.length > 1 && structure[i].name[0] === '$') {
                 
                 domElement.addEventListener(structure[i].name.substr(1), structure[i])
+
+            } else if (typeof structure[i] === 'function' ) {
+                
+                structure[i](domElement)
 
             } else {
 
