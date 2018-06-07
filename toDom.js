@@ -229,16 +229,13 @@ const toDom = function (structure, options = {}) {
 }
 
 
-(function() {
-    
-    if (typeof define === 'function' && define.amd) {
-      define('toDom', function () {
-        return toDom;
-      });
-    } else if (typeof module !== 'undefined' && module.exports) {
-      module.exports = toDom;
-    } else {
-      window.toDom = toDom;
-    }
 
-})();
+if (typeof define === 'function' && define.amd) {
+    define('toDom', function () {
+        return toDom;
+    });
+} else if (typeof module !== 'undefined' && module.exports) {
+    module.exports = toDom;
+} else {
+    window.toDom = toDom;
+}
