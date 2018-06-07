@@ -9,7 +9,7 @@ const toDom = function (structure, options = {}) {
         const cloneNode = el => {
             if (Array.isArray(el)) {
                 return el.map(e => cloneNode(e))
-            } else if ( el instanceof NodeList) {
+            } else if ( el instanceof window.NodeList) {
                 const resp = []
 
                 for (let i = 0; i < el.length ; i++) {
@@ -28,11 +28,11 @@ const toDom = function (structure, options = {}) {
             if (flag.toLowerCase() === 'appendto' || flag.toLowerCase() === 'at') {
 
                 const appendToParent = (parent,resp) => {
-                    if (Array.isArray(resp) || resp instanceof HTMLCollection || resp instanceof NodeList) {
+                    if (Array.isArray(resp) || resp instanceof window.HTMLCollection || resp instanceof window.NodeList) {
                         for (let i = 0; i < resp.length ; i++) {
                             appendToParent(parent,resp[i])
                         }
-                    } else if (Array.isArray(parent) || parent instanceof HTMLCollection || parent instanceof NodeList) {
+                    } else if (Array.isArray(parent) || parent instanceof window.HTMLCollection || parent instanceof window.NodeList) {
                         for (let i = 0; i < parent.length ; i++) {
                             appendToParent(parent[i],resp)
                         }
@@ -52,7 +52,7 @@ const toDom = function (structure, options = {}) {
                     for (let i= 0; i < parents.length; i++) {
                         resp.push(i == 0 ? r : cloneNode(r))
                     }
-                } else if (typeof option === 'object' && (option instanceof HTMLElement)) {
+                } else if (typeof option === 'object' && (option instanceof window.HTMLElement)) {
                     parents = [option]
                     const newOptions = Object.assign({},options);
                     delete newOptions[flag]
@@ -94,7 +94,7 @@ const toDom = function (structure, options = {}) {
 
         // 0 => (string) tag name
         // foreach i >= 1
-        //      if (object) and (not array) and (not HTMLElement) and (not Text) attributes
+        //      if (object) and (not array) and (not window.HTMLElement) and (not Text) attributes
         //      else if (function) event listener
         //      else contained structure
 
@@ -102,7 +102,7 @@ const toDom = function (structure, options = {}) {
 
         for (let i = 1 ; i < structure.length ; i++) {
 
-            if (!Array.isArray(structure[i]) && typeof structure[i] === 'object' && !(structure[i] instanceof HTMLElement) && !(structure[i] instanceof Text)) {
+            if (!Array.isArray(structure[i]) && typeof structure[i] === 'object' && !(structure[i] instanceof window.HTMLElement) && !(structure[i] instanceof window.Text)) {
 
                 for (let attrName in structure[i]) {
                     domElement.setAttribute(attrName, structure[i][attrName])
